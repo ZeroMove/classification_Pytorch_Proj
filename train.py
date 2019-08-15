@@ -10,7 +10,6 @@ from easydict import EasyDict
 from trainer.trainer import Trainer
 
 # parameters path
-# 从配置路径读取配置文件的方式运行工程，配置可以一体化
 parser = argparse.ArgumentParser(description='PyTorch Classification Proj Training')
 parser.add_argument('--config-path', default='./exp_configs/easy_lenet/', type=str)
 args = parser.parse_args()

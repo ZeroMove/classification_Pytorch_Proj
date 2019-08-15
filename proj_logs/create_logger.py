@@ -3,7 +3,7 @@
 # coder: Jiawen Zhu
 # date: 2019.6.9
 # state: half modified
-# 想修改logger格式，但不重要了
+# 想修改logger格式，没时间，先放一放
 
 import logging
 

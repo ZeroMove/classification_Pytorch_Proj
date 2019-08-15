@@ -24,7 +24,6 @@ aug_padding: 4
 train_show_freq: 8
 use_gpu: True
 # todo: w*h
-# lenet的输入尺寸超过48后就很难收敛,调小学习率
 input_size_w: 224
 input_size_h: 224
 epochs: 50
@@ -32,7 +31,6 @@ batch_size: 64
 test_batch: 64
 # 2 epoches
 eval_freq: 2
-# 读数据时的多进程
 workers: 4
 
 # optimizer
@@ -43,7 +41,6 @@ optimize:
   nesterov: True
 
 # regularization
-# ?
 mixup: False
 mixup_alpha: 0.4
 
@@ -53,11 +50,8 @@ augmentation:
   # padding=4
   random_crop: True
   random_horizontal_filp: True
-  # ?
   cutout: False
-  # ?
   holes: 1
-  # ?
   length: 8
 
 # learning rate scheduler
@@ -69,9 +63,7 @@ lr_scheduler:
   lr_epochs: [40, 150, 200]
   lr_mults: 0.1
   # for HTD and COSINE
-  # ?
   min_lr: 0.0
   # only for HTD
-  # ?
   lower_bound: -6.0
   upper_bound: 3.0 

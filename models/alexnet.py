@@ -55,23 +55,11 @@ def alexnet(pretrained, num_classes, inputsize_w, inputsize_h):
     my_alexnet = AlexNet(num_classes=num_classes, inputsize_w=inputsize_w, inputsize_h=inputsize_h)
 
     if pretrained:
-        # 是不是有更简单的加载方式 可以直接使用alexnet，改变最后一层即可，就行resnet
         alexnet = models.alexnet(pretrained=True)
-        # 读取参数
         pretrained_dict = alexnet.state_dict()
         model_dict = my_alexnet.state_dict()
-
-        # 将pretrained_dict里不属于model_dict的键剔除掉
-        # todo: k,v
-        # for k, v in pretrained_dict.items():
-        #     print(k)
-        # print('*****************************')
-        # for k, v in model_dict.items():
-        #     print(k)
         pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in model_dict}
-        # 更新现有的model_dict
         model_dict.update(pretrained_dict)
-        # 加载我们真正需要的state_dict
         my_alexnet.load_state_dict(model_dict)
 
     return my_alexnet

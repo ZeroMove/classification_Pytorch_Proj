@@ -3,7 +3,6 @@
 # coder: Jiawen Zhu
 # date: 2019.6.9
 # state: half modified
-# todo: 想把这些没有用的配置删了，到时候用什么，加什么
 
 # net architecture
 architecture: lenet
@@ -31,7 +30,6 @@ batch_size: 128
 test_batch: 200
 # 2 epoches
 eval_freq: 2
-# 读取一个batch数据时调用的进程
 workers: 4
 
 # optimizer
@@ -62,7 +60,7 @@ augmentation:
 
 # learning rate scheduler
 lr_scheduler:
-  # type: STEP or COSINE or HTD
+  # type: STEP
   type: STEP
   base_lr: 0.01
   # only for STEP
@@ -70,10 +68,7 @@ lr_scheduler:
   lr_epochs: [100, 150, 200]
   # todo
   lr_mults: 0.1
-  # for HTD and COSINE
-  # ?
   min_lr: 0.0
   # only for HTD
-  # ?
   lower_bound: -6.0
   upper_bound: 3.0

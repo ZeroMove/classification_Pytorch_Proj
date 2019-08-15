@@ -6,7 +6,6 @@
 
 import torch.backends.cudnn as cudnn
 import os
-import math
 import time
 import shutil
 from network.get_net_imformation import *
@@ -16,7 +15,6 @@ from tensorboardX import SummaryWriter
 from proj_logs.create_logger import *
 
 
-# 训练器，包含训练过程初始化，训练和验证过程
 class Trainer():
     def __init__(self, output_path=None, config=None):
         # output_path
@@ -24,18 +22,15 @@ class Trainer():
         # read config parameters
         self.config = config
         # start a training log
-        # 使用某个现成模块实现日志
         self.logger = Logger(log_file_name=output_path + '/log.txt',
                              log_level=logging.DEBUG, logger_name="").get_log()
         # start a SummaryWriter
-        # 准备 tensorboard 的summary
         self.writer = SummaryWriter(log_dir=self.output_path + '/event')
         # define network
         self.net = get_model(self.config)
         # set device
         self.device = 'cuda' if self.config.use_gpu else 'cpu'
-        # best model to save
-        # 测试准确率最高的保存点
+        # best model point to save
         self.best_prec = 0
 
     def start_train_and_val(self):
@@ -51,9 +46,7 @@ class Trainer():
         # load model
         self.net.to(self.device)
         # define loss and optimizer
-        # 使用普通的二元交叉熵损失
         criterion = nn.CrossEntropyLoss()
-        # 优化器
         optimizer = torch.optim.SGD(self.net.parameters(), self.config.lr_scheduler.base_lr,
                                     momentum=self.config.optimize.momentum,
                                     weight_decay=self.config.optimize.weight_decay,
@@ -63,8 +56,6 @@ class Trainer():
         ckpt_file_name = self.output_path + '/' + self.config.ckpt_name + '.pth.tar'
         # todo: check if can read
         if self.config.use_checkpoint and os.path.exists(ckpt_file_name):
-            # 可以做到完全断点重训，包括上一个最佳值，训练epoch点 todo: 不知道优化器学习率的参数也是不是能完全接着上次
-            # 读的是上一次训练结果，而不是上一次的best结果
             self.best_prec, last_epoch = self.load_checkpoint(ckpt_file_name, self.net, optimizer=optimizer)
         # load training data, do data augmentation and get data loader
         transform_train = transforms.Compose(
@@ -76,16 +67,13 @@ class Trainer():
         self.logger.info("            =======  Training  =======\n")
         # start train and val
         for epoch in range(last_epoch + 1, self.config.epochs):
-            # 每个epoch调整学习率
             lr = self.adjust_learning_rate(optimizer, epoch, self.config)
             self.writer.add_scalar('learning_rate', lr, epoch)
             self.train(train_loader, self.net, criterion, optimizer, epoch, self.device)
-            # 在训练中穿插验证
             if epoch == 0 or (epoch + 1) % self.config.eval_freq == 0 or epoch == self.config.epochs - 1:
                 self.validate(test_loader, self.net, criterion, optimizer, epoch, self.device, self.best_prec)
         self.logger.info("======== Training Finished.   best_test_acc: {:.3f}% ========".format(self.best_prec))
 
-    # 训练与验证过程的实现子函数
     # -----------------------------------------------------------
     def train(self, train_loader, net, criterion, optimizer, epoch, device):
         start = time.time()
@@ -172,7 +160,6 @@ class Trainer():
             if optimizer != None:
                 best_prec = checkpoint['best_prec']
                 last_epoch = checkpoint['last_epoch']
-                # 理论上，优化器要和checkpoint点中的保持一致
                 optimizer.load_state_dict(checkpoint['optimizer'])
                 # logging.info("=== done. also loaded optimizer from checkpoint '{}' (epoch {}) ===".format(
                 #     path, last_epoch + 1))
@@ -192,17 +179,6 @@ class Trainer():
         if config.lr_scheduler.type == 'STEP':
             if epoch in config.lr_scheduler.lr_epochs:
                 lr *= config.lr_scheduler.lr_mults
-        elif config.lr_scheduler.type == 'COSINE':
-            ratio = epoch / config.epochs
-            lr = config.lr_scheduler.min_lr + \
-                 (config.lr_scheduler.base_lr - config.lr_scheduler.min_lr) * \
-                 (1.0 + math.cos(math.pi * ratio)) / 2.0
-        # elif config.lr_scheduler.type == 'HTD':
-        #     ratio = epoch / config.epochs
-        #     lr = config.lr_scheduler.min_lr + \
-        #         (config.lr_scheduler.base_lr - config.lr_scheduler.min_lr) * \
-        #         (1.0 - math.tanh(config.lr_scheduler.lower_bound +
-        #                          (config.lr_scheduler.upper_bound - config.lr_scheduler.lower_bound) * ratio)) / 2.0
         for param_group in optimizer.param_groups:
             param_group['lr'] = lr
         return lr

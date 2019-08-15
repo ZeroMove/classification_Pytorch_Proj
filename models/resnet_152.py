@@ -149,26 +149,7 @@ class ResNet(nn.Module):
 
 
 def resnet_152(pretrained, num_classes, inputsize_w, inputsize_h):
-    # todo: 上面的代码是不是没用到
     my_resnet = models.resnet152(pretrained=pretrained)
     my_resnet.fc = nn.Linear(512 * 4, num_classes)
-
-    # if pretrained:
-    #     resnet = models.resnet152(pretrained=True)
-    #     # 读取参数
-    #     pretrained_dict = resnet.state_dict()
-    #     model_dict = my_resnet.state_dict()
-    #
-    #     # 将pretrained_dict里不属于model_dict的键剔除掉
-    #     for k, v in pretrained_dict.items():
-    #         print(k)
-    #     print('*****************************')
-    #     for k, v in model_dict.items():
-    #         print(k)
-    #     pretrained_dict = {k: v for k, v in pretrained_dict.items() if k in model_dict}
-    #     # 更新现有的model_dict
-    #     model_dict.update(pretrained_dict)
-    #     # 加载我们真正需要的state_dict
-    #     my_resnet.load_state_dict(model_dict)
 
     return my_resnet

@@ -3,15 +3,11 @@
 # coder: Jiawen Zhu
 # date: 2019.7.13
 # state: modified
-# 说明： 该init文件是模型调用该可
-#       包文件中模块的中继站,import的
-#       时候也需要一同导入
+
 
 from .lenet import *
 from .alexnet import *
 from .resnet_152 import *
-
-
 # from .vgg import *
 # from .resnet import *
 # from .preresnet import *
