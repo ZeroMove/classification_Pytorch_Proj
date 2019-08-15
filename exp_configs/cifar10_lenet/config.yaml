@@ -8,7 +8,7 @@
 architecture: lenet
 
 # log and checkpoint
-use_checkpoint: True
+use_checkpoint: False
 data_path: ./datasets/cifa10/
 ckpt_path: ./exp_output/cifa10_lenet/
 ckpt_name: lenet

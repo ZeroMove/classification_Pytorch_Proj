@@ -17,7 +17,7 @@ class LeNet(nn.Module):
         # pooling：14  14-5+1=10
         self.conv_2 = nn.Conv2d(6, 16, 5)
         # pooling：5
-        self.fc_1 = nn.Linear(16 * ((((inputsize_w - 4) / 2) - 4) / 2) * ((((inputsize_h - 4) / 2) - 4) / 2), 120)
+        self.fc_1 = nn.Linear(int(16 * ((((inputsize_w - 4) / 2) - 4) / 2) * ((((inputsize_h - 4) / 2) - 4) / 2)), 120)
         self.fc_2 = nn.Linear(120, 84)
         self.fc_3 = nn.Linear(84, num_classes)
         # (((inputsize-4）/2)-4)/2
