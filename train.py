@@ -13,7 +13,6 @@ from trainer.trainer import Trainer
 parser = argparse.ArgumentParser(description='PyTorch Classification Proj Training')
 parser.add_argument('--config-path', default='./exp_configs/easy_lenet/', type=str)
 args = parser.parse_args()
-
 # read config parameters from yaml file
 config_path = args.config_path
 output_path = config_path.replace("exp_configs", "exp_output")
